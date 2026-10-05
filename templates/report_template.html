@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Отчёт — {{ client_name }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 16mm 16mm 20mm 16mm;
+      @bottom-center {
+        content: "Страница " counter(page) " из " counter(pages);
+        font-family: "Segoe UI", "Liberation Sans", sans-serif;
+        font-size: 9pt;
+        color: #6d645b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      color: #1c1915;
+      background: #ffffff;
+      font-family: "Segoe UI", "Liberation Sans", "DejaVu Sans", sans-serif;
+      font-size: 11.5pt;
+      line-height: 1.45;
+    }
+
+    .banner {
+      background: #14343c;
+      color: #f6f1e8;
+      padding: 18px 22px 16px 22px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-size: 9pt;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #d5c4a1;
+    }
+
+    h1 {
+      margin: 8px 0 0 0;
+      font-size: 22pt;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .generated {
+      margin: 8px 0 0 0;
+      font-size: 10pt;
+      color: #efe6d6;
+    }
+
+    .content {
+      padding: 18px 4px 0 4px;
+    }
+
+    .summary {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 10px 0;
+      margin: 0 0 8px 0;
+    }
+
+    .summary td {
+      width: 50%;
+      vertical-align: top;
+      background: #f7f3ec;
+      border-top: 4px solid #1f6f78;
+      padding: 12px 14px 14px 14px;
+    }
+
+    .label {
+      margin: 0;
+      font-size: 8.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6d645b;
+    }
+
+    .client-name {
+      margin: 6px 0 0 0;
+      font-size: 16pt;
+      font-weight: 600;
+      color: #14343c;
+    }
+
+    .mood {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11pt;
+      font-weight: 600;
+    }
+
+    .mood-positive {
+      background: #e5f4ec;
+      color: #1e7a46;
+    }
+
+    .mood-neutral {
+      background: #e7eef1;
+      color: #24515c;
+    }
+
+    .mood-negative {
+      background: #fdecea;
+      color: #a33b32;
+    }
+
+    section {
+      margin-top: 16px;
+      page-break-inside: avoid;
+    }
+
+    h2 {
+      margin: 0 0 8px 0;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #e4ddd2;
+      font-size: 12pt;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #14343c;
+    }
+
+    .body-text {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    ol, ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li {
+      margin: 0 0 6px 0;
+    }
+
+    footer {
+      margin-top: 26px;
+      padding-top: 8px;
+      border-top: 1px solid #e4ddd2;
+      font-size: 9pt;
+      color: #6d645b;
+    }
+  </style>
+</head>
+<body>
+  <header class="banner">
+    <p class="eyebrow">AI-Client Report Generator</p>
+    <h1>{{ topic }}</h1>
+    <p class="generated">Сформировано {{ generated_at }}</p>
+  </header>
+
+  <div class="content">
+    <table class="summary">
+      <tr>
+        <td>
+          <p class="label">Клиент</p>
+          <p class="client-name">{{ client_name }}</p>
+        </td>
+        <td>
+          <p class="label">Настроение</p>
+          <p class="mood mood-{{ mood_tone }}">{{ mood }}</p>
+        </td>
+      </tr>
+    </table>
+
+    <section>
+      <h2>Запрос</h2>
+      <p class="body-text">{{ main_request }}</p>
+    </section>
+
+    <section>
+      <h2>Сроки и стоимость</h2>
+      <table class="summary">
+        <tr>
+          <td>
+            <p class="label">Желаемые сроки</p>
+            <p class="body-text">{{ desired_timeline }}</p>
+          </td>
+          <td>
+            <p class="label">Стоимость</p>
+            <p class="body-text">{{ desired_cost }}</p>
+          </td>
+        </tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>Основные пожелания к продукту</h2>
+      {% if requirements|length > 1 %}
+        <ul>
+          {% for requirement in requirements %}
+            <li>{{ requirement }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="body-text">{{ requirements[0] }}</p>
+      {% endif %}
+    </section>
+
+    <section>
+      <h2>Следующие шаги</h2>
+      {% if steps|length > 1 %}
+        <ol>
+          {% for step in steps %}
+            <li>{{ step }}</li>
+          {% endfor %}
+        </ol>
+      {% else %}
+        <p class="body-text">{{ steps[0] }}</p>
+      {% endif %}
+    </section>
+
+    <footer>
+      Отчёт собран автоматически по транскрибации диалога.
+      Перед отправкой клиенту проверьте имена, сроки и договорённости.
+    </footer>
+  </div>
+</body>
+</html>
